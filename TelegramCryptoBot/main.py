@@ -2,8 +2,8 @@ from telegram.ext import Updater, InlineQueryHandler, CommandHandler
 import requests
 import re
 def get_url():
-    contents = requests.get('https://random.dog/woof.json').json()
-    url = contents['url']
+    contents = requests.get('https://api.idex.market/returnTicker')
+    url = contents["market": "ETH_SAN"]
     return url
 def price(bot, update):
     url = get_url()
