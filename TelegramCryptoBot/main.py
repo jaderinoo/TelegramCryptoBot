@@ -14,7 +14,7 @@ def get_url():
     }
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': 'db5a55e7-7cd4-4bf9-8ee1-f2e71239a70c',
+        'X-CMC_PRO_API_KEY': '---',
         }
     
 
