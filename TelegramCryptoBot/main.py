@@ -1,14 +1,34 @@
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler
 import requests
 import re
+from requests import Request, Session
+from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
+import json
+
 def get_url():
-    contents = requests.get('https://api.idex.market/returnTicker')
-    url = contents["market": "ETH_SAN"]
+    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+    parameters = {
+        'start':'1',
+        'limit':'5',
+        'convert':'USD'
+    }
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': 'db5a55e7-7cd4-4bf9-8ee1-f2e71239a70c',
+        }
+    
+
     return url
-def price(bot, update):
-    url = get_url()
-    chat_id = update.message.chat_id
-    bot.send_photo(chat_id=chat_id, photo=url)
+def price(url, headers, parameters):
+
+    session = Session()
+    session.headers.update(headers)
+    response = session.get(url, params=parameters)
+    data = json.loads(response.text)
+        
+    data = json.loads(response.text)
+    print(data)
+    
 def main():
     updater = Updater('886915510:AAHEIaXLNAFdmLDv6qHwotAAMv6ty_BQx7I')
     dp = updater.dispatcher
