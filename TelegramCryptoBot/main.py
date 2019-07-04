@@ -91,7 +91,7 @@ def price(bot,update):
     #Send message to bot
     bot.sendMessage(chat_id, message)
 
-#Initializes the telegram bot and listens for the /price command
+#Initializes the telegram bot and listens for the /price command followed by a symbol
 def main():
     updater = Updater('Bot - Key')
     dp = updater.dispatcher
