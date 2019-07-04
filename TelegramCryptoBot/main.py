@@ -1,27 +1,35 @@
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler, ConversationHandler)
+from telegram import (ForceReply)
+from telegram.ext import (Updater, CommandHandler, MessageHandler)
 import json 
+import re
 
+#Coinmarketcap based Crypto price bot
+#Written by Jad El-Khatib 
 
-#Call api and grab coin info
-#Send coin info to msg to be formatted 
 def price(bot,update):
 
+    #Initialize as BTC
+    symbol = 'BTC'
+    
     #Pull chat ID
     chat_id = update.message.chat_id
     
-    #Sends message to User
-    #update.message.reply_text('Please enter a cryptocurreny symbol')
-
-    #Temp set BTC as symbol until user input is implemented
-    symbol = 'SNTR'
+    #Temp set symbol until user input is implemented
+    symbol = update.message.text
     
+    #Format string and remove the /price and forces it to uppercase
+    symbol = symbol.replace('/price ',"").upper()
+    
+    print(symbol)
+    #Calls the coinmarketcap api with the chosen symbol
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
     parameters = {
         'symbol':symbol
     }
+    
+    #Unsafe but works well for testing
     headers = {
         'Accepts': 'application/json',
         'X-CMC_PRO_API_KEY': 'db5a55e7-7cd4-4bf9-8ee1-f2e71239a70c',
@@ -65,9 +73,9 @@ def price(bot,update):
     #Formatted string
     message = 'Name: ' + name + '\n'
     message += 'Symbol: ' + symbol + '\n' 
+    message += 'CMC Rank: ' + str(rank) + '\n'
     message += 'Circulating Supply: ' + str(circ) + '\n'
     message += 'Total Supply: ' + str(total) + '\n'
-    message += 'CMC Rank: ' + str(rank) + '\n'
     message += 'Total Market cap: ' + str(mc) + '\n'
     message += '----------------------------------- \n'
     message += 'Price: ' + str(price) + '\n'
