@@ -4,6 +4,7 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler, ConversationHandler)
 import json 
 
+
 #Call api and grab coin info
 #Send coin info to msg to be formatted 
 def price(bot,update):
@@ -11,10 +12,12 @@ def price(bot,update):
     #Pull chat ID
     chat_id = update.message.chat_id
     
+    #Sends message to User
+    #update.message.reply_text('Please enter a cryptocurreny symbol')
 
-    symbol = input(bot.sendMessage(chat_id,"Please input a symbol"))
+    #Temp set BTC as symbol until user input is implemented
+    symbol = 'SNTR'
     
-    print(symbol)
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
     parameters = {
         'symbol':symbol
@@ -40,35 +43,54 @@ def price(bot,update):
     rank = data['data'][symbol]['cmc_rank']
     time = data['data'][symbol]['last_updated']
 
-    #Price
+    #Price volume changes and marketcap
     price = data['data'][symbol]['quote']['USD']['price']
-    price = ('%.08f' % price)
-    
-    #Volume changes and marketcap
     vol24 = data['data'][symbol]['quote']['USD']['volume_24h']
     per1h = data['data'][symbol]['quote']['USD']['percent_change_1h']
     per24h = data['data'][symbol]['quote']['USD']['percent_change_24h']
     per7d = data['data'][symbol]['quote']['USD']['percent_change_7d']   
     mc = data['data'][symbol]['quote']['USD']['market_cap']
+    
+    #Float formatting
+    price = ('%.08f' % price)
+    vol24 = ('%.2f' % vol24)
+    per1h = ('%.3f' % per1h)
+    per24h = ('%.3f' % per24h)
+    per7d = ('%.3f' % per7d)
+    mc = ('%.2f' % mc)
 
-    #initialize array
-    currencydata = [name,symbol,circ,total,rank,time,price,vol24,per1h,per24h,per7d,mc]
+    #initialize array / Legacy method
+    #currencydata = [name,symbol,circ,total,rank,time,price,vol24,per1h,per24h,per7d,mc]
  
+    #Formatted string
+    message = 'Name: ' + name + '\n'
+    message += 'Symbol: ' + symbol + '\n' 
+    message += 'Circulating Supply: ' + str(circ) + '\n'
+    message += 'Total Supply: ' + str(total) + '\n'
+    message += 'CMC Rank: ' + str(rank) + '\n'
+    message += 'Total Market cap: ' + str(mc) + '\n'
+    message += '----------------------------------- \n'
+    message += 'Price: ' + str(price) + '\n'
+    message += 'volume-24H: ' + str(vol24) + '\n'
+    message += 'Percentage Change - 1H: ' + str(per1h) + '\n'
+    message += 'Percentage Change - 24H: ' + str(per24h) + '\n'
+    message += 'Percentage Change - 7D: ' + str(per7d) + '\n'
+    message += 'Time Updated: ' + time + '\n'
+  
     #Post message locally
-    print(currencydata)
+    print(message)
 
     #Send message to bot
-    bot.sendMessage(chat_id, currencydata)
+    bot.sendMessage(chat_id, message)
 
 #Initializes the telegram bot and listens for the /price command
 def main():
     updater = Updater('886915510:AAHEIaXLNAFdmLDv6qHwotAAMv6ty_BQx7I')
     dp = updater.dispatcher
-    dp.add_handler(CommandHandler('price',price,))
+    dp.add_handler(CommandHandler('price',price))
     updater.start_polling()
     updater.idle()
-    
-    
+
 if __name__ == '__main__':
     main()
         
