@@ -4,14 +4,6 @@ from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler, ConversationHandler)
 import json 
 
-#Format the String so that it looks 
-def msg(data):
-    
-    #Write code that will format the string
-    msg = data
-
-    return msg
-
 #Call api and grab coin info
 #Send coin info to msg to be formatted 
 def price(bot,update):
@@ -22,17 +14,27 @@ def price(bot,update):
     }
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': '---',
+        'X-CMC_PRO_API_KEY': 'db5a55e7-7cd4-4bf9-8ee1-f2e71239a70c',
         }
 
     session = Session()
-    session.headers.update(headers)
-    response = session.get(url, params=parameters)
-    data = json.loads(response.text)
-    chat_id = update.message.chat_id
     
-    print(data)
-    bot.sendMessage(chat_id,msg(data))
+    session.headers.update(headers)
+    
+    response = session.get(url, params=parameters)
+
+    data = response.json()
+    
+    print(data['data']['2764']['name'])
+    
+    chat_id = update.message.chat_id
+ 
+    #for element in data['data']:
+    #    print(element)
+
+    #print data["data"]["name"]
+    #print(data)
+    bot.sendMessage(chat_id,data)
     
 #Initializes the telegram bot and listens for the /price command
 def main():
