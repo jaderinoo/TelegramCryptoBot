@@ -32,7 +32,7 @@ def price(bot,update):
     #Unsafe but works well for testing
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': 'db5a55e7-7cd4-4bf9-8ee1-f2e71239a70c',
+        'X-CMC_PRO_API_KEY': 'CMC - Key',
         }
 
     #Start session
@@ -80,9 +80,9 @@ def price(bot,update):
     message += '----------------------------------- \n'
     message += 'Price: ' + str(price) + '\n'
     message += 'volume-24H: ' + str(vol24) + '\n'
-    message += 'Percentage Change - 1H: ' + str(per1h) + '\n'
-    message += 'Percentage Change - 24H: ' + str(per24h) + '\n'
-    message += 'Percentage Change - 7D: ' + str(per7d) + '\n'
+    message += 'Percentage Change-1H: ' + str(per1h) + '\n'
+    message += 'Percentage Change-24H: ' + str(per24h) + '\n'
+    message += 'Percentage Change-7D: ' + str(per7d) + '\n'
     message += 'Time Updated: ' + time + '\n'
   
     #Post message locally
@@ -93,7 +93,7 @@ def price(bot,update):
 
 #Initializes the telegram bot and listens for the /price command
 def main():
-    updater = Updater('886915510:AAHEIaXLNAFdmLDv6qHwotAAMv6ty_BQx7I')
+    updater = Updater('Bot - Key')
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('price',price))
     updater.start_polling()
