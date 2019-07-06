@@ -22,7 +22,11 @@ def price(bot,update):
     #Format string and remove the /price and forces it to uppercase
     symbol = symbol.replace('/price ',"").upper()
     
-    cmcKey = json.loads()
+    #Opens
+    with open('keys.txt', 'r') as file:
+        cmcKey = file.read().replace('\n', '')
+    
+    print(cmcKey)
     
     #Calls the coinmarketcap api with the chosen symbol
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
@@ -94,7 +98,14 @@ def price(bot,update):
 
 #Initializes the telegram bot and listens for the /price command followed by a symbol
 def main():
-    botKey = json.loads()
+    
+    #Fetch botkey
+    with open('keys.txt', 'r') as file:
+        botKey = file.readline().replace('\n', '')
+    
+    #Local Testing only / Prints the key to ensure its working
+    print(botKey)
+    
     updater = Updater(botKey)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('price',price))
