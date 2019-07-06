@@ -22,7 +22,8 @@ def price(bot,update):
     #Format string and remove the /price and forces it to uppercase
     symbol = symbol.replace('/price ',"").upper()
     
-    print(symbol)
+    cmcKey = json.loads()
+    
     #Calls the coinmarketcap api with the chosen symbol
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
     parameters = {
@@ -32,7 +33,7 @@ def price(bot,update):
     #Unsafe but works well for testing
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': 'CMC - Key',
+        'X-CMC_PRO_API_KEY': cmcKey,
         }
 
     #Start session
@@ -93,7 +94,8 @@ def price(bot,update):
 
 #Initializes the telegram bot and listens for the /price command followed by a symbol
 def main():
-    updater = Updater('Bot - Key')
+    botKey = json.loads()
+    updater = Updater(botKey)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('price',price))
     updater.start_polling()
