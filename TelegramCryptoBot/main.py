@@ -8,10 +8,11 @@ import re
 #Coinmarketcap based Crypto price bot
 #Written by Jad El-Khatib 
 
+#Fetch keys for bot and Coinmarketcap API
+with open('keys.txt', 'r') as file:
+    keys = file.read().split('\n')
+    
 def price(bot,update):
-
-    #Initialize as BTC
-    symbol = 'BTC'
     
     #Pull chat ID
     chat_id = update.message.chat_id
@@ -22,12 +23,6 @@ def price(bot,update):
     #Format string and remove the /price and forces it to uppercase
     symbol = symbol.replace('/price ',"").upper()
     
-    #Opens
-    with open('keys.txt', 'r') as file:
-        cmcKey = file.read().replace('\n', '')
-    
-    print(cmcKey)
-    
     #Calls the coinmarketcap api with the chosen symbol
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
     parameters = {
@@ -37,7 +32,7 @@ def price(bot,update):
     #Unsafe but works well for testing
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': cmcKey,
+        'X-CMC_PRO_API_KEY': keys[1],
         }
 
     #Start session
@@ -98,15 +93,8 @@ def price(bot,update):
 
 #Initializes the telegram bot and listens for the /price command followed by a symbol
 def main():
-    
-    #Fetch botkey
-    with open('keys.txt', 'r') as file:
-        botKey = file.readline().replace('\n', '')
-    
-    #Local Testing only / Prints the key to ensure its working
-    print(botKey)
-    
-    updater = Updater(botKey)
+    print(keys[0])
+    updater = Updater(keys[0])
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('price',price))
     updater.start_polling()
