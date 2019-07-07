@@ -4,7 +4,12 @@ A lightweight Cryptocurrency information grabber for Telegram using Python
 # Usage 
 Run the bot while filling both the Coinmarketcap key as well as the Telegram bot key in the external txt file
 
-The only command currently is /price (coin symbol)
+# Commands
+/Price (Coin symbol) - Displays current price and statistics of the coin selected
+
+/Top - Displays the ranking and prices of the top 10 cryptocurrencies
+
+/Help - Presents a list of the menu options
 
 # Current Plans
 Implement encryption for both the text file and the strings
