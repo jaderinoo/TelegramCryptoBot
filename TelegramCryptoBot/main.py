@@ -44,7 +44,7 @@ def price(bot,update):
     response = session.get(url, params=parameters)
     data = json.loads(response.text)
 
-    #Format the response and sets it to an array
+    #Format the response and sets to a string
     name = data['data'][symbol]['name']
     symbol = data['data'][symbol]['symbol']
     circ = data['data'][symbol]['circulating_supply']
@@ -120,18 +120,37 @@ def top(bot,update):
     response = session.get(url, params=parameters)
     data = json.loads(response.text)
 
-    #Format the response and sets it to an array
-    while() #Count i up to 10 and add to message
+    #Grab the initial values for item 0
+    name = data['data'][0]['name']
+    symbol = data['data'][0]['symbol']
+    time = data['data'][0]['quote']['USD']['last_updated']
+    price = data['data'][0]['quote']['USD']['price']
+    
+    #Format the price value to 2 decimals
+    price = ('%.2f' % price)
+    
+    #Format the initial string for item 0
+    message = '1: ' + name + ' (' + symbol + ') Price: $' + str(price) + '\n'
+    
+    #While loop to grab all remaining items
+    i = 1
+    while i < 10: #Count i up to 10 and add to message
         name = data['data'][i]['name']
         symbol = data['data'][i]['symbol']
-        time = data['data'][i]['last_updated']
+        time = data['data'][i]['quote']['USD']['last_updated']
         price = data['data'][i]['quote']['USD']['price']
     
-    #Format the message
-    message = 'Name: ' + '' + '\n'
-
+        #Format the price value to 2 decimals
+        price = ('%.2f' % price)
+        
+        #Format the message
+        message += str(i + 1) + ': ' + name + ' (' + symbol + ') Price: ' + str(price) + '\n'
+        
+        #increment 1 to move to next value
+        i += 1
+        
     #Post message locally
-    print(data)
+    print(message)
 
     #Send message to bot
     bot.sendMessage(chat_id, message)
