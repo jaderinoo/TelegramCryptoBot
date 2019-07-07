@@ -155,14 +155,25 @@ def top(bot,update):
     #Send message to bot
     bot.sendMessage(chat_id, message)
 
+def help(bot,update): 
 
-#Initializes the telegram bot and listens for the /price command followed by a symbol
+    #Pull chat ID
+    chat_id = update.message.chat_id
+    
+    #Initialize message
+    message = "Current command list: \n" + "/Price (coin symbol) \n" + "/Top \n"
+    
+    #Sends the help message to the user
+    bot.sendMessage(chat_id, message)
+    
+#Initializes the telegram bot and listens for a command
 def main():
     print(keys[0])
     updater = Updater(keys[0])
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('price',price))
     dp.add_handler(CommandHandler('top',top))
+    dp.add_handler(CommandHandler('help',help))
     updater.start_polling()
     updater.idle()
 
