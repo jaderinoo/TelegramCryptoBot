@@ -11,7 +11,8 @@ import re
 #Fetch keys for bot and Coinmarketcap API
 with open('keys.txt', 'r') as file:
     keys = file.read().split('\n')
-    
+     
+#Finds the price for specified tokens
 def price(bot,update):
     
     #Pull chat ID
@@ -91,16 +92,62 @@ def price(bot,update):
     #Send message to bot
     bot.sendMessage(chat_id, message)
 
+#Finds the prices for the top 10 current cryptos
+def top(bot,update): 
+    
+    #Pull chat ID
+    chat_id = update.message.chat_id
+    
+    #Calls the coinmarketcap api with the chosen symbol
+    url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
+    parameters = {
+        'start':'1',
+        'limit':'10',
+        'convert':'USD'
+    }
+    
+    #Unsafe but works well for testing
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': keys[1],
+        }
+
+    #Start session
+    session = Session()
+    
+    #Set headers and pull response while pulling data
+    session.headers.update(headers)
+    response = session.get(url, params=parameters)
+    data = json.loads(response.text)
+
+    #Format the response and sets it to an array
+    while() #Count i up to 10 and add to message
+        name = data['data'][i]['name']
+        symbol = data['data'][i]['symbol']
+        time = data['data'][i]['last_updated']
+        price = data['data'][i]['quote']['USD']['price']
+    
+    #Format the message
+    message = 'Name: ' + '' + '\n'
+
+    #Post message locally
+    print(data)
+
+    #Send message to bot
+    bot.sendMessage(chat_id, message)
+
+
 #Initializes the telegram bot and listens for the /price command followed by a symbol
 def main():
     print(keys[0])
     updater = Updater(keys[0])
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('price',price))
+    dp.add_handler(CommandHandler('top',top))
     updater.start_polling()
     updater.idle()
 
 if __name__ == '__main__':
     main()
         
-        
+
