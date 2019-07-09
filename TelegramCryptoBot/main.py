@@ -76,15 +76,15 @@ def price(bot,update):
     message += 'Symbol: ' + symbol + '\n' 
     message += 'CMC Rank: ' + str(rank) + '\n'
     message += 'Circulating Supply: ' + str(circ) + '\n'
-    message += 'Total Supply: ' + str(total) + '\n'
-    message += 'Total Market cap: ' + str(mc) + '\n'
+    message += 'Total Supply: $' + str(total) + '\n'
+    message += 'Total Market cap: $' + str(mc) + '\n'
     message += '----------------------------------- \n'
-    message += 'Price: ' + str(price) + '\n'
-    message += 'volume-24H: ' + str(vol24) + '\n'
-    message += 'Percentage Change-1H: ' + str(per1h) + '\n'
-    message += 'Percentage Change-24H: ' + str(per24h) + '\n'
-    message += 'Percentage Change-7D: ' + str(per7d) + '\n'
-    message += 'Time Updated: ' + time + '\n'
+    message += 'Price: $' + str(price) + '\n'
+    message += 'volume-24H: $' + str(vol24) + '\n'
+    message += 'Percentage Change-1H: ' + str(per1h) + '% \n'
+    message += 'Percentage Change-24H: ' + str(per24h) + '% \n'
+    message += 'Percentage Change-7D: ' + str(per7d) + '% \n'
+    message += 'Time Updated: ' + time
   
     #Post message locally
     print(message)
@@ -144,16 +144,71 @@ def top(bot,update):
         price = ('%.2f' % price)
         
         #Format the message
-        message += str(i + 1) + ': ' + name + ' (' + symbol + ') Price: ' + str(price) + '\n'
+        message += str(i + 1) + ': ' + name + ' (' + symbol + ') Price: $' + str(price) + '\n'
         
         #increment 1 to move to next value
         i += 1
-        
+      
+    #Add update time to strings    
+    message += 'Time Updated: ' + time
+    
     #Post message locally
     print(message)
 
     #Send message to bot
     bot.sendMessage(chat_id, message)
+    
+#Pulls global statistics and sends it to the user
+def market(bot,update):
+    
+    #Pull chat ID
+    chat_id = update.message.chat_id
+    
+    url = 'https://pro-api.coinmarketcap.com/v1/global-metrics/quotes/latest'
+    parameters = {
+        'convert':'USD'
+    }
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': keys[1],
+    }
+    
+    #Start session
+    session = Session()
+    
+    #Set headers and pull response while pulling data
+    session.headers.update(headers)
+    response = session.get(url, params=parameters)
+    data = json.loads(response.text)
+
+    #Grab the initial values for item 0
+    btcdom = data['data']['btc_dominance']
+    ethdom = data['data']['eth_dominance']
+    active = data['data']['active_cryptocurrencies']
+    totalmkt = data['data']['quote']['USD']['total_market_cap']
+    total24h = data['data']['quote']['USD']['total_volume_24h']
+    time = data['data']['quote']['USD']['last_updated']
+    
+    #Float formatting
+    btcdom = ('%.2f' % btcdom)
+    ethdom = ('%.2f' % ethdom)
+    totalmkt = ('%.2f' % totalmkt)
+    total24h = ('%.2f' % total24h)
+    
+    #Formatted string
+    message = 'Total Market cap: $' + str(totalmkt) + '\n'
+    message += 'Total 24h Volume: $' + str(total24h) + '\n'
+    message += 'BTC Dominance: ' + str(btcdom) + '% \n'
+    message += 'Eth Dominance: ' + str(ethdom) + '% \n'
+    message += 'Total Active Currencies: ' + str(active) + '\n'
+    message += 'Time Updated: ' + str(time) + '\n'
+    
+    #Post message locally
+    print(message)
+
+    #Send message to bot
+    bot.sendMessage(chat_id, message)
+
 
 def help(bot,update): 
 
@@ -161,7 +216,7 @@ def help(bot,update):
     chat_id = update.message.chat_id
     
     #Initialize message
-    message = "Current command list: \n" + "/Price (coin symbol) \n" + "/Top \n"
+    message = "Current command list: \n" + "/Price (coin symbol) \n" + "/Top \n" + "/Market \n"
     
     #Sends the help message to the user
     bot.sendMessage(chat_id, message)
@@ -173,6 +228,7 @@ def main():
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('price',price))
     dp.add_handler(CommandHandler('top',top))
+    dp.add_handler(CommandHandler('market',market))
     dp.add_handler(CommandHandler('help',help))
     updater.start_polling()
     updater.idle()
