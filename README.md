@@ -19,4 +19,4 @@ Be able to run the program and have it encrypt the strings and rewrite them back
 Process decryption on load
 
 # Depiction
-![alt text](ss.png)
+![alt text](depiction.png)
