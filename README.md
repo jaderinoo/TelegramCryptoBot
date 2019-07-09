@@ -9,6 +9,8 @@ Run the bot while filling both the Coinmarketcap key as well as the Telegram bot
 
 /Top - Displays the ranking and prices of the top 10 cryptocurrencies
 
+/Market - Displays total market statistics
+
 /Help - Presents a list of the menu options
 
 # Current Plans
