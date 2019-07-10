@@ -3,6 +3,7 @@ from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 from telegram.ext import (Updater, CommandHandler)
 import json 
 import time
+import datetime
 
 #Coinmarketcap based Crypto price bot
 #Written by Jad El-Khatib 
@@ -11,6 +12,8 @@ import time
 with open('keys.txt', 'r') as file:
     keys = file.read().split('\n')
      
+currentDT = datetime.datetime.now()
+cooldownSeconds = 0
 #Finds the price for specified tokens
 def price(bot,update):
     
@@ -90,6 +93,11 @@ def price(bot,update):
 
     #Send message to bot
     bot.sendMessage(chat_id, message)
+    
+    #Call main with a reset cooldown
+    main(0, currentDT)
+    
+    return
 
 #Finds the prices for the top 10 current cryptos
 def top(bot,update): 
@@ -157,7 +165,10 @@ def top(bot,update):
     #Send message to bot
     bot.sendMessage(chat_id, message)
     
-    commandCooldown(bot,update)
+    #Call main with a reset cooldown
+    main(0, currentDT)
+    
+    return
 
 #Pulls global statistics and sends it to the user
 def market(bot,update):
@@ -209,22 +220,12 @@ def market(bot,update):
 
     #Send message to bot
     bot.sendMessage(chat_id, message)
-
-#Temporary cooldown fix until I find a better method
-def commandCooldown(bot,update):
     
-    #Pull chat ID
-    chat_id = update.message.chat_id
+    #Call main with a reset cooldown
+    currentDT = datetime.datetime.now()
+    main(0, currentDT)
     
-    #Initialize message
-    message = "2 Second cooldown complete \n"
-
-    #Sleep
-    time.sleep(2)
-
-    #Sends the help message to the user
-    bot.sendMessage(chat_id, message)
-
+    return
 
 def help(bot,update): 
 
@@ -236,19 +237,45 @@ def help(bot,update):
 
     #Sends the help message to the user
     bot.sendMessage(chat_id, message)
+    
+    #Call main with a reset cooldown
+    main(0, currentDT)
+    
+    return
  
 #Initializes the telegram bot and listens for a command
-def main():
-    updater = Updater(keys[0])
+def main(cooldownSeconds,currentDT):
+    updater = Updater(keys[0])     
     dp = updater.dispatcher
-    dp.add_handler(CommandHandler('price',price))
-    dp.add_handler(CommandHandler('top',top))
-    dp.add_handler(CommandHandler('market',market))
-    dp.add_handler(CommandHandler('help',help))
-    updater.start_polling()
-    updater.idle()
+    
+    #Initialize the time in seconds needed to allow user input
+    if cooldownSeconds == 0:
+        cooldownSeconds = currentDT.second + 7
+        print ("cc set to = " + str(currentDT.second))
+        print ("Cooldown set to = " + str(cooldownSeconds))
+       
+    #Check if the initialized time is over 60, as the currentDT doesnt pass 60 
+    if cooldownSeconds >= 60:
+            cooldownSeconds = cooldownSeconds - 60
+        
+    #Continue to update currentDT until it matches the cooldown time
+    while currentDT.second != cooldownSeconds:
+        time.sleep(1)
+        currentDT = datetime.datetime.now()
+        print ("Current = " + str(currentDT.second))
+        print ("Cooldown = " + str(cooldownSeconds))
+
+    #Allow user input when countdown is finished
+    while currentDT.second == cooldownSeconds:
+        dp.add_handler(CommandHandler('price',price))
+        dp.add_handler(CommandHandler('top',top))
+        dp.add_handler(CommandHandler('market',market))
+        dp.add_handler(CommandHandler('help',help))
+        
+        updater.start_polling()
+        updater.idle()
         
 if __name__ == '__main__':
-    main()
+    main(0, currentDT)
 
 
