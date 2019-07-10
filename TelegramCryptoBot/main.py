@@ -217,10 +217,10 @@ def commandCooldown(bot,update):
     chat_id = update.message.chat_id
     
     #Initialize message
-    message = "20 Second cooldown complete \n"
+    message = "2 Second cooldown complete \n"
 
     #Sleep
-    time.sleep(20)
+    time.sleep(2)
 
     #Sends the help message to the user
     bot.sendMessage(chat_id, message)
