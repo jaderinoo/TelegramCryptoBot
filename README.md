@@ -14,11 +14,7 @@ Run the bot while filling both the Coinmarketcap key as well as the Telegram bot
 /Help - Presents a list of the menu options
 
 # Current Plans
-Implement encryption for both the text file and the strings
-
-Be able to run the program and have it encrypt the strings and rewrite them back into the file 
-
-Process decryption on load
+Currently I have put into place a cooldown that will only process commands every 20 seconds. Unfortunatly the bot still registers user requests and will persue them after the 20 seconds are up. I'd like to make a proper cooldown that will also ignore requests during the 20 seconds.
 
 # Depiction
 ![alt text](depiction.png)
