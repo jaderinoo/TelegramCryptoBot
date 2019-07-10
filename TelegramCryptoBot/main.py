@@ -93,10 +93,8 @@ def price(bot,update):
 
     #Send message to bot
     bot.sendMessage(chat_id, message)
-    
-    #Call main with a reset cooldown
-    main(0, currentDT)
-    
+    currentDT = datetime.datetime.now()
+    cooldown(cooldownSeconds,currentDT)
     return
 
 #Finds the prices for the top 10 current cryptos
@@ -164,10 +162,8 @@ def top(bot,update):
 
     #Send message to bot
     bot.sendMessage(chat_id, message)
-    
-    #Call main with a reset cooldown
-    main(0, currentDT)
-    
+    currentDT = datetime.datetime.now()
+    cooldown(cooldownSeconds,currentDT)
     return
 
 #Pulls global statistics and sends it to the user
@@ -223,34 +219,28 @@ def market(bot,update):
     
     #Call main with a reset cooldown
     currentDT = datetime.datetime.now()
-    main(0, currentDT)
-    
+    cooldown(cooldownSeconds,currentDT)
+
     return
 
 def help(bot,update): 
 
     #Pull chat ID
     chat_id = update.message.chat_id
-    
+        
     #Initialize message
     message = "Please dont spam the bot, it only has 333 requests a day :) \nA 20 second cooldown is placed after each command execution. \n \n" + "Current command list: \n" + "/Price (coin symbol) \n" + "/Top \n" + "/Market \n"
-
+    
     #Sends the help message to the user
     bot.sendMessage(chat_id, message)
-    
-    #Call main with a reset cooldown
-    main(0, currentDT)
-    
+        
     return
  
-#Initializes the telegram bot and listens for a command
-def main(cooldownSeconds,currentDT):
-    updater = Updater(keys[0])     
-    dp = updater.dispatcher
+def cooldown(cooldownSeconds,currentDT):
     
     #Initialize the time in seconds needed to allow user input
     if cooldownSeconds == 0:
-        cooldownSeconds = currentDT.second + 7
+        cooldownSeconds = currentDT.second + 5
         print ("cc set to = " + str(currentDT.second))
         print ("Cooldown set to = " + str(cooldownSeconds))
        
@@ -260,22 +250,31 @@ def main(cooldownSeconds,currentDT):
         
     #Continue to update currentDT until it matches the cooldown time
     while currentDT.second != cooldownSeconds:
-        time.sleep(1)
         currentDT = datetime.datetime.now()
+        time.sleep(1)
         print ("Current = " + str(currentDT.second))
         print ("Cooldown = " + str(cooldownSeconds))
 
     #Allow user input when countdown is finished
-    while currentDT.second == cooldownSeconds:
-        dp.add_handler(CommandHandler('price',price))
-        dp.add_handler(CommandHandler('top',top))
-        dp.add_handler(CommandHandler('market',market))
-        dp.add_handler(CommandHandler('help',help))
-        
-        updater.start_polling()
-        updater.idle()
-        
+    if currentDT.second == cooldownSeconds:
+        return 
+ 
+#Initializes the telegram bot and listens for a command
+def main():
+    updater = Updater(keys[0])     
+    dp = updater.dispatcher
+    
+    #Creating Handler
+    dp.add_handler(CommandHandler('price',price))
+    dp.add_handler(CommandHandler('top',top))
+    dp.add_handler(CommandHandler('market',market))
+    dp.add_handler(CommandHandler('help',help))
+    
+    #Start polling
+    updater.start_polling()
+    updater.idle()
+    
 if __name__ == '__main__':
-    main(0, currentDT)
+    main()
 
 
