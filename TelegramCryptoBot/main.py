@@ -254,10 +254,6 @@ def cooldown(cooldownSeconds,currentDT):
         time.sleep(1)
         print ("Current = " + str(currentDT.second))
         print ("Cooldown = " + str(cooldownSeconds))
-
-    #Allow user input when countdown is finished
-    if currentDT.second == cooldownSeconds:
-        return 
  
 #Initializes the telegram bot and listens for a command
 def main():
@@ -276,5 +272,6 @@ def main():
     
 if __name__ == '__main__':
     main()
+
 
 
