@@ -1,9 +1,8 @@
-from requests import Request, Session
+from requests import Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
-from telegram import (ForceReply)
-from telegram.ext import (Updater, CommandHandler, MessageHandler)
+from telegram.ext import (Updater, CommandHandler)
 import json 
-import re
+import time
 
 #Coinmarketcap based Crypto price bot
 #Written by Jad El-Khatib 
@@ -158,6 +157,8 @@ def top(bot,update):
     #Send message to bot
     bot.sendMessage(chat_id, message)
     
+    commandCooldown(bot,update)
+
 #Pulls global statistics and sends it to the user
 def market(bot,update):
     
@@ -209,6 +210,21 @@ def market(bot,update):
     #Send message to bot
     bot.sendMessage(chat_id, message)
 
+#Temporary cooldown fix until I find a better method
+def commandCooldown(bot,update):
+    
+    #Pull chat ID
+    chat_id = update.message.chat_id
+    
+    #Initialize message
+    message = "20 Second cooldown complete \n"
+
+    #Sleep
+    time.sleep(20)
+
+    #Sends the help message to the user
+    bot.sendMessage(chat_id, message)
+
 
 def help(bot,update): 
 
@@ -216,14 +232,13 @@ def help(bot,update):
     chat_id = update.message.chat_id
     
     #Initialize message
-    message = "Current command list: \n" + "/Price (coin symbol) \n" + "/Top \n" + "/Market \n"
-    
+    message = "Please dont spam the bot, it only has 333 requests a day :) \nA 20 second cooldown is placed after each command execution. \n \n" + "Current command list: \n" + "/Price (coin symbol) \n" + "/Top \n" + "/Market \n"
+
     #Sends the help message to the user
     bot.sendMessage(chat_id, message)
-    
+ 
 #Initializes the telegram bot and listens for a command
 def main():
-    print(keys[0])
     updater = Updater(keys[0])
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('price',price))
@@ -232,8 +247,8 @@ def main():
     dp.add_handler(CommandHandler('help',help))
     updater.start_polling()
     updater.idle()
-
+        
 if __name__ == '__main__':
     main()
-        
+
 
