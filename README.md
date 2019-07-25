@@ -2,7 +2,11 @@
 A lightweight Cryptocurrency information grabber for Telegram using Python
 
 # Usage 
-Run the bot while filling both the Coinmarketcap key as well as the Telegram bot key in the external txt file
+Download and Install the Telegram.ext from https://github.com/python-telegram-bot/python-telegram-bot
+
+Fill both the Coinmarketcap key as well as the Telegram bot key in the external txt file
+
+Run - sudo Python3 main.py
 
 # Commands
 /Price (Coin symbol) - Displays current price and statistics of the coin selected
