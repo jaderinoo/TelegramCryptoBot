@@ -229,7 +229,7 @@ def help(bot,update):
     chat_id = update.message.chat_id
         
     #Initialize message
-    message = "Please dont spam the bot, it only has 333 requests a day :) \nA 20 second cooldown is placed after each command execution. \n \n" + "Current command list: \n" + "/Price (coin symbol) \n" + "/Top \n" + "/Market \n"
+    message = "Please dont spam the bot, it only has 333 requests a day :) \nA 20 second cooldown is placed after each command execution. \n \n" + "Current command list: \n" + "/Price (coin symbol) \n" + "/Top \n" + "/Market \n"+ "/Help \n"
     
     #Sends the help message to the user
     bot.sendMessage(chat_id, message)
@@ -265,6 +265,7 @@ def main():
     dp.add_handler(CommandHandler('top',top))
     dp.add_handler(CommandHandler('market',market))
     dp.add_handler(CommandHandler('help',help))
+    dp.add_handler(CommandHandler('start',help))
     
     #Start polling
     updater.start_polling()
