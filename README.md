@@ -2,6 +2,10 @@
 A lightweight Cryptocurrency information grabber for Telegram using Python
 
 # Usage 
+Start a chat with it at: https://t.me/SNTRPriceBot
+
+<h3>Or Setup:</h3>
+
 Download and Install the Telegram.ext from https://github.com/python-telegram-bot/python-telegram-bot
 
 Fill both the Coinmarketcap key as well as the Telegram bot key in the external txt file
