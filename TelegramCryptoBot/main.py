@@ -78,7 +78,7 @@ def price(bot,update):
     message += 'Symbol: ' + symbol + '\n' 
     message += 'CMC Rank: ' + str(rank) + '\n'
     message += 'Circulating Supply: ' + str(circ) + '\n'
-    message += 'Total Supply: $' + str(total) + '\n'
+    message += 'Total Supply: ' + str(total) + '\n'
     message += 'Total Market cap: $' + str(mc) + '\n'
     message += '----------------------------------- \n'
     message += 'Price: $' + str(price) + '\n'
@@ -233,7 +233,7 @@ def help(bot,update):
     
     #Sends the help message to the user
     bot.sendMessage(chat_id, message)
-        
+    
     return
  
 def cooldown(cooldownSeconds,currentDT):
