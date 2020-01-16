@@ -3,15 +3,12 @@ from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 from telegram.ext import (Updater, CommandHandler)
 import json 
 import time
+import keys
 import datetime
 
 #Coinmarketcap based Crypto price bot
 #Written by Jad El-Khatib 
 
-#Fetch keys for bot and Coinmarketcap API
-with open('keys.txt', 'r') as file:
-    keys = file.read().split('\n')
-     
 currentDT = datetime.datetime.now()
 cooldownSeconds = 0
 #Finds the price for specified tokens
@@ -35,7 +32,7 @@ def price(bot,update):
     #Unsafe but works well for testing
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': keys[1],
+        'X-CMC_PRO_API_KEY': keys.cmcKey,
         }
 
     #Start session
@@ -114,7 +111,7 @@ def top(bot,update):
     #Unsafe but works well for testing
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': keys[1],
+        'X-CMC_PRO_API_KEY': keys.cmcKey,
         }
 
     #Start session
@@ -178,7 +175,7 @@ def market(bot,update):
     }
     headers = {
         'Accepts': 'application/json',
-        'X-CMC_PRO_API_KEY': keys[1],
+        'X-CMC_PRO_API_KEY': keys.cmcKey,
     }
     
     #Start session
@@ -257,7 +254,7 @@ def cooldown(cooldownSeconds,currentDT):
  
 #Initializes the telegram bot and listens for a command
 def main():
-    updater = Updater(keys[0])     
+    updater = Updater(keys.botKey)     
     dp = updater.dispatcher
     
     #Creating Handler
